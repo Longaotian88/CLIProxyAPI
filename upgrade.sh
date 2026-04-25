@@ -208,16 +208,15 @@ print_section "步骤 1: 检查升级前置条件"
 
 CURRENT_PORT="$(get_port "$CONFIG_FILE")"
 ensure_main_branch
-require_clean_tracked_files
 
 echo "项目目录: $PROJECT_DIR"
 echo "当前分支: main"
 echo "当前服务端口: $CURRENT_PORT"
 
-print_section "步骤 2: 拉取最新代码"
-git fetch origin
-git pull --ff-only origin main
-git submodule update --init --recursive
+print_section "步骤 2: 拉取最新代码并同步到 fork"
+git fetch upstream
+git merge upstream/main --no-edit
+git push origin main
 
 [[ -f "$CONFIG_FILE" ]] || die "更新后未找到配置文件: $CONFIG_FILE"
 
